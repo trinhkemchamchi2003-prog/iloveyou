@@ -215,7 +215,11 @@
 
       @media (max-width: 1024px) {
         .slider-item {
-          min-width: calc(50% - 10px);
+          min-width: calc(50% - 8px);
+        }
+
+        .slider-item img {
+          height: 280px;
         }
       }
 
@@ -224,17 +228,56 @@
           font-size: 2rem;
         }
 
+        .photo-slider {
+          padding: 0 10px;
+          margin: 30px auto;
+        }
+
+        .slider-track {
+          gap: 10px;
+        }
+
         .slider-item {
-          min-width: 100%;
+          min-width: calc(100% - 10px);
+          margin: 0 5px;
         }
 
         .slider-item img {
-          height: 250px;
+          height: 400px;
+        }
+
+        .slider-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 22px;
         }
 
         .popup-close {
           top: 10px;
           right: 10px;
+        }
+
+        .popup-content {
+          max-width: 95%;
+          max-height: 95%;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .slider-item img {
+          height: 350px;
+        }
+
+        .STARDUST1 {
+          font-size: 1.2rem;
+        }
+
+        .STARDUST2 {
+          font-size: 1.8rem;
+        }
+
+        .STARDUST3 {
+          font-size: 1rem;
         }
       }
     </style>
@@ -358,13 +401,15 @@
 
       function updateSlider() {
         const itemWidth = sliderItems[0].offsetWidth;
-        const gap = 20;
-        const offset = currentIndex * (itemWidth + gap) * itemsPerView;
+        const gap =
+          window.innerWidth <= 768 ? 10 : window.innerWidth <= 1024 ? 15 : 15;
+        const offset = currentIndex * (itemWidth + gap);
         sliderTrack.style.transform = `translateX(-${offset}px)`;
       }
 
       function nextSlide() {
-        if (currentIndex < totalSlides - 1) {
+        const maxIndex = sliderItems.length - itemsPerView;
+        if (currentIndex < maxIndex) {
           currentIndex++;
           updateSlider();
         }
@@ -413,8 +458,9 @@
           "transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
 
         const movedBy = currentTranslate - prevTranslate;
+        const maxIndex = sliderItems.length - itemsPerView;
 
-        if (movedBy < -100 && currentIndex < totalSlides - 1) {
+        if (movedBy < -100 && currentIndex < maxIndex) {
           nextSlide();
         } else if (movedBy > 100 && currentIndex > 0) {
           prevSlide();
@@ -423,18 +469,21 @@
         }
 
         const itemWidth = sliderItems[0].offsetWidth;
-        const gap = 20;
-        prevTranslate = -currentIndex * (itemWidth + gap) * itemsPerView;
+        const gap =
+          window.innerWidth <= 768 ? 10 : window.innerWidth <= 1024 ? 15 : 15;
+        prevTranslate = -currentIndex * (itemWidth + gap);
       }
 
       prevBtn.addEventListener("click", prevSlide);
       nextBtn.addEventListener("click", nextSlide);
 
       window.addEventListener("resize", () => {
+        updateItemsPerView();
         updateSlider();
         const itemWidth = sliderItems[0].offsetWidth;
-        const gap = 20;
-        prevTranslate = -currentIndex * (itemWidth + gap) * itemsPerView;
+        const gap =
+          window.innerWidth <= 768 ? 10 : window.innerWidth <= 1024 ? 15 : 15;
+        prevTranslate = -currentIndex * (itemWidth + gap);
       });
 
       // Image Popup
